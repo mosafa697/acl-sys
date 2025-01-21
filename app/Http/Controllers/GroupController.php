@@ -11,7 +11,11 @@ class GroupController extends Controller
     public function index()
     {
         $groups = Group::with('permissions')->get();
-        $permissions = Permission::all();
+
+        $permissions = Permission::with([
+            'method:id,name,control_id',
+            'method.control:id,name'
+        ])->get();
 
         return view('groups.index', compact('groups', 'permissions'));
     }

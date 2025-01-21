@@ -5,14 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Group extends Model
+class Method extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
+    public function control()
+    {
+        return $this->belongsTo(Control::class);
+    }
+
     public function permissions()
     {
-        return $this->belongsToMany(Permission::class);
+        return $this->hasMany(Permission::class);
     }
 }

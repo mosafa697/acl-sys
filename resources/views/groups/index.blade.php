@@ -15,7 +15,11 @@
                         <div>
                             <input type="checkbox" name="permissions[]" value="{{ $permission->id }}"
                                 {{ $group->permissions->contains($permission) ? 'checked' : '' }}>
-                            <label>{{ $permission->name }}</label>
+                            <label>
+                                {{ $permission->name }} -
+                                {{ $permission->method?->name }} -
+                                {{ $permission->method?->control?->name }}
+                            </label>
                         </div>
                     @endforeach
                     <button type="submit">Update Permissions</button>
