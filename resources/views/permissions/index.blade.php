@@ -1,5 +1,6 @@
 <h1>Permissions</h1>
 <a href="{{ route('permissions.create') }}">Create New Permission</a>
+<a href="{{ route('groups.index') }}">Edit Groups</a>
 <ul>
     @foreach ($permissions as $permission)
         <li>
