@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 
 class GroupPermissionsController extends Controller
 {
-    // Assign permissions to a group
     public function assignPermissions(Request $request, Group $group)
     {
         $request->validate([

@@ -15,18 +15,18 @@ class CombinedSeeder extends Seeder
     public function run()
     {
         $controllers = [
-            'User' => ['index', 'show', 'store', 'update', 'destroy'],
-            'UserPermission' => ['index', 'show', 'store', 'update', 'destroy'],
-            'Group' => ['index', 'show', 'store', 'update', 'destroy'],
-            'GroupPermission' => ['index', 'show', 'store', 'update', 'destroy'],
-            'Permission' => ['index', 'show', 'store', 'update', 'destroy'],
+            'User' => ['index', 'store', 'update', 'destroy'],
+            'User Permission' => ['update', 'edit'],
+            'Group' => ['index', 'store', 'update', 'destroy'],
+            'Group Permission' => ['assign'],
+            'Permission' => ['index', 'store', 'update', 'destroy'],
         ];
 
         $controls = [];
         foreach ($controllers as $controller => $methods) {
             $control = Control::factory()->create([
                 'name' => $controller,
-                'slug' => strtolower(class_basename($controller)),
+                'slug' => Str::slug($controller),
             ]);
             $controls[] = $control;
 
