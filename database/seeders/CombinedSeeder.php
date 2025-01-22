@@ -5,38 +5,56 @@ namespace Database\Seeders;
 use App\Models\Control;
 use App\Models\Method;
 use App\Models\Permission;
-use App\Models\Group;
 use App\Models\User;
+use App\Models\Group;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class CombinedSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
-        $controls = Control::factory()->count(5)->create();
+        $controllers = [
+            'User' => ['index', 'show', 'store', 'update', 'destroy'],
+            'UserPermission' => ['index', 'show', 'store', 'update', 'destroy'],
+            'Group' => ['index', 'show', 'store', 'update', 'destroy'],
+            'GroupPermission' => ['index', 'show', 'store', 'update', 'destroy'],
+            'Permission' => ['index', 'show', 'store', 'update', 'destroy'],
+        ];
 
-        $methods = Method::factory()->count(10)->create([
-            'control_id' => function () use ($controls) {
-                return $controls->random()->id;
-            },
-        ]);
+        $controls = [];
+        foreach ($controllers as $controller => $methods) {
+            $control = Control::factory()->create([
+                'name' => $controller,
+                'slug' => strtolower(class_basename($controller)),
+            ]);
+            $controls[] = $control;
 
-        $permissions = Permission::factory()->count(20)->create([
-            'method_id' => function () use ($methods) {
-                return $methods->random()->id;
-            },
-        ]);
+            foreach ($methods as $method) {
+                Method::factory()->create([
+                    'name' => $method,
+                    'slug' => Str::slug($method),
+                    'control_id' => $control->id,
+                ]);
+            }
+        }
+
+        $methods = Method::all();
+        $permissions = [];
+        foreach ($methods as $method) {
+            $permission = Permission::factory()->create([
+                'name' => $method->name . '-' . $method->control->slug,
+                'slug' => $method->control->slug . '@' . $method->slug,
+                'method_id' => $method->id,
+            ]);
+            $permissions[] = $permission;
+        }
 
         $users = User::factory()->count(5)->create();
 
         $users->each(function ($user) use ($permissions) {
             $user->permissions()->attach(
-                $permissions->random(rand(0, 5))->pluck('id')->toArray()
+                collect($permissions)->random(rand(0, 5))->pluck('id')->toArray()
             );
         });
 
