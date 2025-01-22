@@ -33,11 +33,6 @@ class PermissionController extends Controller
         return redirect()->route('permissions.index')->with('success', 'Permission created successfully.');
     }
 
-    public function show(Permission $permission)
-    {
-        return view('permissions.show', compact('permission'));
-    }
-
     public function edit(Permission $permission)
     {
         return view('permissions.edit', compact('permission'));

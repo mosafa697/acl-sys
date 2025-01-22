@@ -6,6 +6,7 @@ use App\Models\Control;
 use App\Models\Method;
 use App\Models\Permission;
 use App\Models\Group;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class CombinedSeeder extends Seeder
@@ -25,11 +26,19 @@ class CombinedSeeder extends Seeder
             },
         ]);
 
-        Permission::factory()->count(20)->create([
+        $permissions = Permission::factory()->count(20)->create([
             'method_id' => function () use ($methods) {
                 return $methods->random()->id;
             },
         ]);
+
+        $users = User::factory()->count(5)->create();
+
+        $users->each(function ($user) use ($permissions) {
+            $user->permissions()->attach(
+                $permissions->random(rand(0, 5))->pluck('id')->toArray()
+            );
+        });
 
         Group::factory()->count(3)->create();
     }
