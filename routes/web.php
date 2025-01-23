@@ -19,4 +19,6 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::resource('permissions', PermissionController::class);
+
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::redirect('/home', '/');

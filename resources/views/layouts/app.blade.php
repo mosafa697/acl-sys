@@ -33,17 +33,25 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a href="{{ route('permissions.index') }}" class="btn btn-primary">Permissions</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('groups.index') }}" class="btn btn-primary">Groups</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('users.index') }}" class="btn btn-primary">Users</a>
-                        </li>
-                    </ul>
+                    @auth
+                        <ul class="navbar-nav me-auto">
+                            @can('index', App\Models\Permission::class)
+                                <li class="nav-item">
+                                    <a href="{{ route('permissions.index') }}" class="btn btn-primary">Permissions</a>
+                                </li>
+                            @endcan
+                            @can('index', App\Models\Group::class)
+                                <li class="nav-item">
+                                    <a href="{{ route('groups.index') }}" class="btn btn-primary">Groups</a>
+                                </li>
+                            @endcan
+                            @can('index', App\Models\User::class)
+                                <li class="nav-item">
+                                    <a href="{{ route('users.index') }}" class="btn btn-primary">Users</a>
+                                </li>
+                            @endcan
+                        </ul>
+                    @endauth
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">

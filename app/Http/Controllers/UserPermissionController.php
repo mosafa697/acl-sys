@@ -10,6 +10,8 @@ class UserPermissionController extends Controller
 {
     public function edit(User $user)
     {
+        $this->authorize('update', 'UserPermission');
+
         $user->load('permissions');
         $permissions = Permission::all();
 
@@ -18,6 +20,8 @@ class UserPermissionController extends Controller
 
     public function update(Request $request, User $user)
     {
+        $this->authorize('update', 'UserPermission');
+
         $request->validate([
             'permissions.*' => 'exists:permissions,id',
         ]);

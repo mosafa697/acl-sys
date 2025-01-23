@@ -9,6 +9,8 @@ class GroupPermissionsController extends Controller
 {
     public function assignPermissions(Request $request, Group $group)
     {
+        $this->authorize('assign', 'GroupPermission');
+
         $request->validate([
             'permissions.*' => 'exists:permissions,id',
         ]);

@@ -6,7 +6,7 @@ use App\Models\User;
 
 class GroupPolicy
 {
-    public function view(User $user): bool
+    public function index(User $user): bool
     {
         return $user->permissions->contains('name', 'index-group');
     }
