@@ -1,66 +1,153 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## Access Control List (ACL) system
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This is a Laravel-based application that provides a user management system with role-based permissions. It allows administrators to:
 
-## About Laravel
+-   **Manage Users**: Create, update, and delete user accounts.
+-   **Assign Roles**: Define roles (e.g., Admin, Editor, Viewer) and assign them to users.
+-   **Control Permissions**: Grant or restrict access to specific features based on user roles.
+-   **Dynamic Permissions**: Assign permissions dynamically to users or groups.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The application is built with Laravel for the backend and MySQL for the database. It includes features like authentication, authorization and simple user interface.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Installation
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Follow these steps to set up the application on your local machine.
 
-## Learning Laravel
+### 1. Clone the Repository
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Clone the repository to your local machine:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```bash
+git clone https://github.com/your-username/your-repo-name.git
+cd your-repo-name
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 2. Install Dependencies
 
-## Laravel Sponsors
+Install PHP dependencies using Composer:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+composer i
+```
 
-### Premium Partners
+Install JavaScript dependencies using npm:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+```bash
+npm i
+```
 
-## Contributing
+### 3. Set Up Environment File
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Copy the `.env.example` file to `.env`:
 
-## Code of Conduct
+```bash
+cp .env.example .env
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Generate an application key:
 
-## Security Vulnerabilities
+```bash
+php artisan key:generate
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Update the `.env` file with your database credentials:
 
-## License
+```bash
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=your_database_name
+DB_USERNAME=your_database_username
+DB_PASSWORD=your_database_password
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 4. Run Migrations and Seeders
+
+Run the database migrations to create the necessary tables:
+
+```bash
+php artisan migrate
+```
+
+Seed the database with initial data (e.g., roles, permissions, and a default admin user):
+
+```bash
+php artisan db:seed
+```
+
+### 5. Complie Assets
+
+Compile the frontend assets (CSS, JavaScript) using Vite:
+
+```bash
+npm run build
+```
+
+### 6. Start the Development Server
+
+```bash
+php artisan serve
+```
+
+Visit the application in your browser at [http://localhost:8000](http://localhost:8000).
+
+## Usage
+
+Access the application:
+
+-   open your browser at [http://localhost:8000](http://localhost:8000).
+-   Log in with the default admin credentials:
+    -   **Email**: admin@gmail.com
+    -   Password: 12345
+
+## Code Examples
+
+### Policies
+
+Policies are used to authorize user actions. For example, the UserPermissionPolicy checks if a user can update permissions:
+
+```php
+namespace App\Policies;
+
+use App\Models\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
+
+class UserPermissionPolicy
+{
+    use HandlesAuthorization;
+
+    public function update(User $user)
+    {
+        return $user->permissions->contains('slug', 'update-user-permissions');
+    }
+}
+```
+
+### Using Policies in Controllers
+
+Use the `authorize` method in controllers to check permissions:
+
+```php
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class UserPermissionController extends Controller
+{
+    public function update(Request $request, $id)
+    {
+        $this->authorize('update', 'UserPermission');
+        // Logic to update permissions
+    }
+}
+```
+
+### Using Policies in Blade Templates
+
+Use the `@can` directive in Blade templates to conditionally display UI elements:
+
+```php
+@can('update', 'UserPermission')
+    <a href="{{ route('user-permissions.edit', $id) }}" class="btn btn-warning">Edit Permissions</a>
+@endcan
+```
